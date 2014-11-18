@@ -12,9 +12,10 @@ define(['jquery'], function($) {
   Dota2Api.prototype = {
     getMatchHistory: function(callback, heroId, gameMode, skill, dateMin, dateMax, minPlayers, accountId, leagueId, startAtMatchId, matchesRequested, tournamentGamesOnly)
     {
+      matchesRequested = matchesRequested ? matchesRequested : 25;
       var that = this;
       $.ajax({
-        url: proxyApiUrl + "GetMatchHistory/V001/?Key=" + that.apiKey + "&hero_id=" + heroId + "&game_mode=" + gameMode + "&skill=" + skill + "&date_min=" + dateMin + "&date_max=" + dateMax + "&min_players=" + minPlayers + "&account_id=" + accountId + "&league_id=" + leagueId + "&start_at_match_id" + startAtMatchId + "&matches_requested" + matchesRequested + "&tournament_games_only" + tournamentGamesOnly
+        url: proxyApiUrl + "GetMatchHistory/V001/?Key=" + that.apiKey + "&hero_id=" + heroId + "&game_mode=" + gameMode + "&skill=" + skill + "&date_min=" + dateMin + "&date_max=" + dateMax + "&min_players=" + minPlayers + "&account_id=" + accountId + "&league_id=" + leagueId + "&start_at_match_id=" + startAtMatchId + "&matches_requested=" + matchesRequested + "&tournament_games_only=" + tournamentGamesOnly
       }).then(function(data) {
         callback(data);
       });

@@ -14,17 +14,22 @@ define(['jquery',
             this.accountId = accountId;
           }
 
-          Player.anonymous = utils.convertId(4294967295);
+          Player.anonymousSteamId = utils.convertId(4294967295);
+          Player.anonymousAccountId = 4294967295;
 
           Player.prototype = {
             getPlayerSummaries: function(callback, renderIntoContainer){
               var steamId = utils.convertId(this.accountId);
-              var that = this;
-              $.ajax({
-                url: proxyApiUrl + "GetPlayerSummaries/V002/?Key=" + that.apiKey + "&steamids=" + "STEAM_0:1:" + steamId
-              }).then(function(data) {
-                  callback(data, renderIntoContainer, that.accountId);
-              });
+              if (steamId != Player.anonymousSteamId){
+                var that = this;
+                $.ajax({
+                  url: proxyApiUrl + "GetPlayerSummaries/V002/?Key=" + that.apiKey + "&steamids=" + "STEAM_0:1:" + steamId
+                }).then(function(data) {
+                    callback(data, renderIntoContainer, that.accountId);
+                });
+              } else {
+                callback(null, renderIntoContainer, this.accountId);
+              }
             }
           };
 

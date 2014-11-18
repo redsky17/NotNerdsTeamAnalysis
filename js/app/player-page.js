@@ -14,12 +14,12 @@ define(['jquery',
 
           document.title = playerId + "\'s Match History";
 
-          var renderPlayerInfo = function(data, accountId, matchId){
+          var renderPlayerInfo = function(data, containerName, accountId){
             if (data){
               var response = data.response;
               for (var player in response.players){
                 if (response.players[player].steamid !== Player.anonymous){
-                  $('#player-' + accountId + "-" + matchId).append("<p><img src=\"" + response.players[player].avatar + "\"/><a href=\"/players/" + accountId + "\">"+ response.players[player].personaname +"</a></p>");
+                  $(containerName).append("<p><img src=\"" + response.players[player].avatar + "\"/><a href=\"/players/" + accountId + "\">"+ response.players[player].personaname +"</a></p>");
                 }
               }
             }
@@ -33,12 +33,14 @@ define(['jquery',
                 for (var match in result.matches) {
                   $('#player-matches').append("<div id=\"match-" + result.matches[match].match_id + "\">");
                   $('#match-' + result.matches[match].match_id).append("<h4> Match ID: " + result.matches[match].match_id + "</h4>");
+                  $('#match-' + result.matches[match].match_id).append("<p><a href=\"dota2://matchid=" + result.matches[match].match_id + "\">Watch Match Replay</a></p>");
                   $('#match-' + result.matches[match].match_id).append("<h5> Players </h5>");
                   for (var player in result.matches[match].players){
-                    $('#match-' + result.matches[match].match_id).append("<div id=\"player-" + result.matches[match].players[player].account_id + "-" + result.matches[match].match_id + "\">");
-                    var playerInfo = new Player(apiKey, result.matches[match].players[player].account_id,result.matches[match].match_id);
-                    playerInfo.getPlayerSummaries(renderPlayerInfo);
-                    $('#player-' + result.matches[match].players[player].account_id + '-' + result.matches[match].match_id).append("<p>Hero: " + result.matches[match].players[player].hero_id + "</p>");
+                    var containerName = "player-" + result.matches[match].players[player].account_id + "-" + result.matches[match].match_id;
+                    $('#match-' + result.matches[match].match_id).append("<div id=\"" + containerName + "\">");
+                    var playerInfo = new Player(apiKey, result.matches[match].players[player].account_id);
+                    playerInfo.getPlayerSummaries(renderPlayerInfo, "#" + containerName);
+                    $('#' + containerName).append("<p>Hero: " + result.matches[match].players[player].hero_id + "</p>");
                   }
                 }
               }

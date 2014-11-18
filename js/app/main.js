@@ -28,5 +28,5 @@ define(['jquery',
             }
           }
 
-          api.getTeamInfoByTeamId(displayData, nerdsTeamId, 1);
+          //api.getTeamInfoByTeamId(displayData, nerdsTeamId, 1);
 });

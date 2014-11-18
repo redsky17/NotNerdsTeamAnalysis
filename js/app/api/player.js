@@ -9,22 +9,21 @@ define(['jquery',
 
           var utils = new Utils();
 
-          function Player(apiKey,accountId,matchId){
+          function Player(apiKey,accountId){
             this.apiKey = apiKey;
             this.accountId = accountId;
-            this.matchId = matchId;
           }
 
           Player.anonymous = utils.convertId(4294967295);
 
           Player.prototype = {
-            getPlayerSummaries: function(callback){
+            getPlayerSummaries: function(callback, renderIntoContainer){
               var steamId = utils.convertId(this.accountId);
               var that = this;
               $.ajax({
                 url: proxyApiUrl + "GetPlayerSummaries/V002/?Key=" + that.apiKey + "&steamids=" + "STEAM_0:1:" + steamId
               }).then(function(data) {
-                callback(data, that.accountId, that.matchId);
+                  callback(data, renderIntoContainer, that.accountId);
               });
             }
           };

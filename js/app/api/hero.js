@@ -27,7 +27,6 @@ define(['jquery',
             },
 
             buildHeroData: function(data) {
-              getHeroes()
               if (data){
                 var result = data.result;
 
@@ -45,7 +44,7 @@ define(['jquery',
           function Hero(apiKey,id){
             this.apiKey = apiKey;
             this.heroId = id;
-            this.buildHeroData;
+            this.getHeroes(buildHeroData);
           }
 
   return Hero;

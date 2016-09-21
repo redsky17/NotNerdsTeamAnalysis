@@ -12,6 +12,10 @@ define(['jquery',
 
           var api = new Dota2Api(apiKey);
 
+          var players = [];
+
+          var teamMatches = [];
+
           var renderPlayerInfo = function(data, container, accountId){
             if (data){
               var response = data.response;
@@ -44,6 +48,7 @@ define(['jquery',
                           $('#team-roster').append("<div id=\"" + containerName + "\">");
                           player = new Player(apiKey, result.teams[team][field]);
                           player.getPlayerSummaries(renderPlayerInfo, "#" + containerName);
+                          players.push(player);
                      }
                   }
                 }
@@ -53,10 +58,41 @@ define(['jquery',
             }
           }
 
+          var displayTeaMatchData = function(data) {
+            var result = data.result;
+            if (result.status === 1){
+              for (var match in result.matches) {
+                var teamPlayersCount = 0;
+                for (var player in result.matches[match].players){
+                  for (var teamPlayer in players){
+                    if (result.matches[match].players[player].account_id === players[teamPlayer]) {
+                        teamPlayersCount++;
+                    }
+                  }
+                  if (teamPlayersCount >= this.minPlayers){
+                    var matchContainerId = "match-" + result.matches[match].match_id;
+                    $('#team-matches').append("<div id=\"" + matchContainerId +  "\">");
+                    $('#' + matchContainerId).append()
+
+                  }
+                }
+              }
+            }
+          }
+
 
           $('#min-teammates').change(function() {
+            getTeamMatchHistory($(this).text());
 
           });
+
+          var getTeamMatchHistory = function(minPlayers){
+            this.minPlayers = minPlayers;
+            for (var player in players) {
+               var playerId = players[player].accountId;
+               api.getMatchHistory(displayTeamMatchData, null, null, null, null, null, null, playerId);
+            }
+          }
 
           api.getTeamInfoByTeamId(displayData, teamId, 1);
 });
